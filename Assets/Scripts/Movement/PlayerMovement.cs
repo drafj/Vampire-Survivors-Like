@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,19 +10,33 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] SpriteRenderer sprite;
     [SerializeField] private float velocity;
+    [SerializeField] Animator anim;
+
+    private Vector2 movementInput;
+    private Vector3 actualDirection;
 
     private void Move()
     {
-        Vector2 movementInput = playerInput.actions["Move"].ReadValue<Vector2>();
+        movementInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
-        Vector3 actualDirection = new Vector3(movementInput.x, movementInput.y, 0);
+        actualDirection = new Vector3(movementInput.x, movementInput.y, 0);
 
+        rb.MovePosition(transform.position + actualDirection * velocity * Time.fixedDeltaTime);
+    }
+
+    private void AnimationsUpdater()
+    {
         if (actualDirection.x > 0)
             sprite.flipX = false;
         else if (actualDirection.x < 0)
             sprite.flipX = true;
 
-        rb.MovePosition(transform.position + actualDirection * velocity * Time.fixedDeltaTime);
+        anim.SetBool("Walk", actualDirection.magnitude > 0);
+    }
+
+    private void Update()
+    {
+        AnimationsUpdater();
     }
 
     void FixedUpdate()
