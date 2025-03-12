@@ -30,10 +30,12 @@ public class GameCycle : MonoBehaviour, IGameCycle
         enemyPool = GameObject.FindGameObjectWithTag("EnemyPool").GetComponent<IPool>();
         coinPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<IPoolWithParams>();
         _onGameEnded.AddListener(EndGame);
+        Time.timeScale = 0;
     }
 
     public void StartGame()
     {
+        Time.timeScale = 1;
         inGameplay = true;
         enemyPool.DespawnObjects();
         coinPool.DespawnObjects();
@@ -50,25 +52,27 @@ public class GameCycle : MonoBehaviour, IGameCycle
         DeactivateGameplayObjects();
         if (actualGameCycleCo != null)
             StopCoroutine(actualGameCycleCo);
+        Time.timeScale = 0;
     }
 
     public void LevelUp()
     {
         if (enemiesCount < maxEnemiesPerLevel)
         enemiesCount++;
-        //enemyPool.IncreaseEnemiesLife();
+        enemyPool.IncreaseEnemiesLife();
         StartGame();
     }
 
     public void Restart()
     {
         enemiesCount = 1;
-        //enemyPool.ResetEnemiesLife();
+        enemyPool.ResetEnemiesLife();
         StartGame();
     }
 
     private void EndLevel()
     {
+        Time.timeScale = 0;
         upgradeMenu.SetActive(true);
         inGameplay = false;
         DeactivateGameplayObjects();

@@ -1,17 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
     private int damage = 20;
-    [SerializeField] GameObject enemyPoolGO;
     private IPool enemyPool;
-    private IHealable healInterface;
-    [SerializeField] GameObject coinPoolGO;
+    private IDamageable lifeSystem;
     private IPoolWithParams coinPool;
-    private UnityEvent OnDeath;
 
     private void Awake()
     {
@@ -20,14 +16,15 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        OnDeath.AddListener(enemyPool.SpawnObject);
-        OnDeath.AddListener(Dead);
+        lifeSystem.OnDeath.AddListener(enemyPool.SpawnObject);
+        lifeSystem.OnDeath.AddListener(Dead);
     }
 
     private void SetInterfaces()
     {
-        enemyPool = enemyPoolGO.GetComponent<IPool>();
-        coinPool = coinPoolGO.GetComponent<IPoolWithParams>();
+        enemyPool = GameObject.FindGameObjectWithTag("EnemyPool").GetComponent<IPool>();
+        coinPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<IPoolWithParams>();
+        lifeSystem = GetComponent<IDamageable>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -47,8 +44,8 @@ public class Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        OnDeath.RemoveListener(enemyPool.SpawnObject);
-        OnDeath.RemoveListener(Dead);
-        healInterface.SetLifeToMaxLife();
+        lifeSystem.OnDeath.RemoveListener(enemyPool.SpawnObject);
+        lifeSystem.OnDeath.RemoveListener(Dead);
+        lifeSystem.SetLifeToMaxLife();
     }
 }

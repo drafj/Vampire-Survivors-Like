@@ -7,11 +7,13 @@ public class EnemyPool : MonoBehaviour, IPool
 {
     [SerializeField] private List<GameObject> pool = new List<GameObject>();
     [SerializeField] private List<Transform> spawnPoints = new List<Transform>();
-    [SerializeField] private GameObject enemyPrefab;
+    private IGameCycle gameCycle;
     private bool inGame = true;
 
     private void Awake()
     {
+        gameCycle = FindObjectsOfType<MonoBehaviour>().OfType<IGameCycle>().FirstOrDefault();
+        gameCycle.OnGameStarted.AddListener(ActivateSpawn);
     }
 
     public void SpawnObject()
@@ -19,7 +21,7 @@ public class EnemyPool : MonoBehaviour, IPool
         if (!inGame) return;
         if (pool[0].activeSelf)
         {
-            pool.Add(Instantiate(enemyPrefab, new Vector3(1000, 1000, 1000), Quaternion.identity));
+            pool.Add(Instantiate(pool[Random.Range(0, pool.Count)], new Vector3(1000, 1000, 1000), Quaternion.identity));
         }
         else
         {
@@ -40,6 +42,22 @@ public class EnemyPool : MonoBehaviour, IPool
         for (int i = 0; i < pool.Count; i++)
         {
             pool[i].SetActive(false);
+        }
+    }
+
+    public void IncreaseEnemiesLife()
+    {
+        for (int i = 0; i < pool.Count; i++)
+        {
+            pool[i].GetComponent<IDamageable>().IncreaseMaxLife();
+        }
+    }
+
+    public void ResetEnemiesLife()
+    {
+        for (int i = 0; i < pool.Count; i++)
+        {
+            pool[i].GetComponent<IDamageable>().ResetLife();
         }
     }
 

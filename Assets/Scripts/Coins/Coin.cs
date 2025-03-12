@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Coin : MonoBehaviour
 {
     private float timeTillDisapear = 5;
-    private MeshRenderer meshRenderer;
+    private SpriteRenderer image;
     private Coroutine flickerCo;
     private Coroutine disableCo;
     private IStats stats;
@@ -15,7 +15,7 @@ public class Coin : MonoBehaviour
     private void Awake()
     {
         stats = FindObjectsOfType<MonoBehaviour>().OfType<IStats>().FirstOrDefault();
-        meshRenderer = GetComponent<MeshRenderer>();
+        image = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
@@ -26,7 +26,7 @@ public class Coin : MonoBehaviour
 
     private void OnDisable()
     {
-        meshRenderer.enabled = true;
+        image.enabled = true;
         StopCoroutine(disableCo);
         StopCoroutine(flickerCo);
     }
@@ -47,9 +47,9 @@ public class Coin : MonoBehaviour
         yield return new WaitForSeconds(timeTillDisapear / 2);
         while (true)
         {
-            meshRenderer.enabled = false;
+            image.enabled = false;
             yield return new WaitForSeconds(0.25f);
-            meshRenderer.enabled = true;
+            image.enabled = true;
             yield return new WaitForSeconds(0.25f);
         }
     }

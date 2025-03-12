@@ -6,14 +6,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private PlayerInput playerInput;
+    [SerializeField] Rigidbody2D rb;
     [SerializeField] private float velocity;
-    [SerializeField] private Rigidbody rb;
 
     private void Move()
     {
         Vector2 movementInput = playerInput.actions["Move"].ReadValue<Vector2>();
 
-        Vector3 actualDirection = new Vector3(movementInput.x, 0, movementInput.y);
+        Vector3 actualDirection = new Vector3(movementInput.x, movementInput.y, 0);
 
         rb.MovePosition(transform.position + actualDirection * velocity * Time.fixedDeltaTime);
     }

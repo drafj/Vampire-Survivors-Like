@@ -42,11 +42,11 @@ public class StatsManager : MonoBehaviour, IStats
 
     private void Awake()
     {
-        /*player = playerGO.GetComponent<IDamageable>();
+        player = playerGO.GetComponent<IDamageable>();
         initialSawVelocity = _sawsVelocity;
         initialDamage = _damage;
         damageTxt.text = _damage.ToString();
-        sawSpeedTxt.text = _sawsVelocity.ToString();*/
+        sawSpeedTxt.text = _sawsVelocity.ToString();
     }
 
     public void AddCoins()
@@ -126,7 +126,7 @@ public class StatsManager : MonoBehaviour, IStats
         else
         {
             ShowMessage(playerHealedTxt);
-            //player.Heal();
+            player.Heal();
             Buy(healCost);
         }
     }

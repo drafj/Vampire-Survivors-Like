@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: UpgradeMenuTable_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 8782578d3f03a934bb8f497dd77fcf34, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 19091906560
+    m_Localized: SELECT CHARACTER UPGRADES
+    m_Metadata:
+      m_Items: []
+  - m_Id: 738203832639488
+    m_Localized: Damage increase 100 coins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 738565369061376
+    m_Localized: Add Saw 300 Coins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 738793987989504
+    m_Localized: Increase Saw Speed 50 coins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 738958949965824
+    m_Localized: Heal Player 100 Coins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739413214060544
+    m_Localized: 'Player Stats:'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739560564154368
+    m_Localized: 'HP: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739715547881472
+    m_Localized: 'Coins: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739794333687808
+    m_Localized: 'Damage: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739906623594496
+    m_Localized: 'Saws: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 739979659010048
+    m_Localized: 'Saws Speed: '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 740146260959232
+    m_Localized: Continue Gameplay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 815109676425216
+    m_Localized: Game Over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 815788952346624
+    m_Localized: Restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1027370173030400
+    m_Localized: Damage increased!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1027570006450176
+    m_Localized: Saw added!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1027736390295552
+    m_Localized: Saw speed Increased!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1027978368081920
+    m_Localized: Player healed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1031229624770560
+    m_Localized: Not enough money
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1031349288263680
+    m_Localized: Max saws reached
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
