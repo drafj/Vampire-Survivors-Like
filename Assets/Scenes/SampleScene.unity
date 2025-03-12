@@ -7298,7 +7298,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 12b61630c067eb545a51fd9d32c279aa, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3f271b4432730094c9434529bf10d9fe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -7371,6 +7371,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerInput: {fileID: 262076961}
   rb: {fileID: 262076966}
+  sprite: {fileID: 262076959}
   velocity: 5
 --- !u!114 &262076963
 MonoBehaviour:
