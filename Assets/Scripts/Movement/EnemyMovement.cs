@@ -10,7 +10,6 @@ public class EnemyMovement : MonoBehaviour
     private float velocity = 4.5f;
     private float normalVelocity = 4.5f;
     private float recoilVelocity = -1f;
-    private Coroutine deactivateMovementCo;
 
     private void OnEnable()
     {
@@ -21,31 +20,25 @@ public class EnemyMovement : MonoBehaviour
     private void OnDisable()
     {
         gameObject.GetComponent<IDamageable>().OnHitted.RemoveListener(RecoilMovement);
-        if (deactivateMovementCo != null)
-            StopCoroutine(deactivateMovementCo);
-        deactivateMovementCo = null;
         velocity = normalVelocity;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && velocity == normalVelocity)
             RecoilMovement();
     }
 
     public void RecoilMovement()
     {
-        if (deactivateMovementCo != null)
-            StopCoroutine(deactivateMovementCo);
-        deactivateMovementCo = StartCoroutine(RecoilMovementCO());
+        if (!gameObject.activeSelf) return;
+        velocity = recoilVelocity;
+        Invoke(nameof(RecoilMovementCO), deactivateTime);
     }
 
-    IEnumerator RecoilMovementCO()
+    void RecoilMovementCO()
     {
-        velocity = recoilVelocity;
-        yield return new WaitForSeconds(deactivateTime);
         velocity = normalVelocity;
-        deactivateMovementCo = null;
     }
 
     private void Move()

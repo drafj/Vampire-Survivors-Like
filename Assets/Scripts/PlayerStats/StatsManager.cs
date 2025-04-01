@@ -33,20 +33,25 @@ public class StatsManager : MonoBehaviour, IStats
     private float _sawsVelocity = 90;
     private float initialSawVelocity;
     private int sawsCount = 1;
-    private IDamageable player;
+    private IDamageable _player;
     private Coroutine messageCo;
     private GameObject actualMessage;
 
     public int Coins { get { return _coins; } }
-    private int _coins = 0;
+    private int _coins = 100000;
 
     private void Awake()
     {
-        player = playerGO.GetComponent<IDamageable>();
+        _player = playerGO.GetComponent<IDamageable>();
         initialSawVelocity = _sawsVelocity;
         initialDamage = _damage;
         damageTxt.text = _damage.ToString();
         sawSpeedTxt.text = _sawsVelocity.ToString();
+    }
+
+    public void SetPlayer(IDamageable player)
+    {
+        _player = player;
     }
 
     public void AddCoins()
@@ -126,7 +131,7 @@ public class StatsManager : MonoBehaviour, IStats
         else
         {
             ShowMessage(playerHealedTxt);
-            player.Heal();
+            _player.Heal();
             Buy(healCost);
         }
     }

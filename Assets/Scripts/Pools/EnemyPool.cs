@@ -5,8 +5,9 @@ using UnityEngine;
 
 public class EnemyPool : MonoBehaviour, IPool
 {
-    [SerializeField] private List<GameObject> pool = new List<GameObject>();
     [SerializeField] private List<Transform> spawnPoints = new List<Transform>();
+    [SerializeField] private GameObject enemyPrefab;
+    private ObjectPool newPool;
     private IGameCycle gameCycle;
     private bool inGame = true;
 
@@ -14,21 +15,15 @@ public class EnemyPool : MonoBehaviour, IPool
     {
         gameCycle = FindObjectsOfType<MonoBehaviour>().OfType<IGameCycle>().FirstOrDefault();
         gameCycle.OnGameStarted.AddListener(ActivateSpawn);
+
+        newPool = new ObjectPool(enemyPrefab.GetComponent<RecyclableObject>());
+        newPool.Init(40);
     }
 
-    public void SpawnObject()
+    public void SpawnObject(Transform spawnPositiion = null)
     {
         if (!inGame) return;
-        if (pool[0].activeSelf)
-        {
-            pool.Add(Instantiate(pool[Random.Range(0, pool.Count)], new Vector3(1000, 1000, 1000), Quaternion.identity));
-        }
-        else
-        {
-            pool[0].SetActive(true);
-        }
-        pool[0].transform.position = spawnPoints[Random.Range(0, spawnPoints.Count)].position;
-        RotateOrders();
+        newPool.Spawn<GameObject>(spawnPoints[Random.Range(0, spawnPoints.Count)].position);
     }
 
     private void ActivateSpawn()
@@ -39,29 +34,10 @@ public class EnemyPool : MonoBehaviour, IPool
     public void DespawnObjects()
     {
         inGame = false;
-        for (int i = 0; i < pool.Count; i++)
-        {
-            pool[i].SetActive(false);
-        }
+        newPool.RecycleAllObjects();
     }
 
-    public void IncreaseEnemiesLife()
-    {
-        for (int i = 0; i < pool.Count; i++)
-        {
-            pool[i].GetComponent<IDamageable>().IncreaseMaxLife();
-        }
-    }
-
-    public void ResetEnemiesLife()
-    {
-        for (int i = 0; i < pool.Count; i++)
-        {
-            pool[i].GetComponent<IDamageable>().ResetLife();
-        }
-    }
-
-    public void RotateOrders()
+    /*public void RotateOrders()
     {
         GameObject actual = null;
         GameObject save = null;
@@ -85,5 +61,5 @@ public class EnemyPool : MonoBehaviour, IPool
                 pool[0] = save;
             }
         }
-    }
+    }*/
 }

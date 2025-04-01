@@ -19,14 +19,14 @@ public class PlayerLifeController : MonoBehaviour
         lifeSystem = GetComponent<IDamageable>();
         lifeSystem.OnHitted.AddListener(SetLifebarValue);
         hpTxt.text = lifeSystem.life.ToString();
-        lifeSystem.OnDeath.AddListener(GameOver);
+        lifeSystem.onDeath += GameOver;
+        gameCycle.OnResetLevel += SetLifebarValue;
     }
 
     private void GameOver()
     {
         gameOverPanel.SetActive(true);
         gameCycle.OnGameEnded.Invoke();
-        lifeSystem.ResetLife();
         SetLifebarValue();
     }
 

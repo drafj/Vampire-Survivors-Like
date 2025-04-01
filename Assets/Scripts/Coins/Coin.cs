@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class Coin : MonoBehaviour
+public class Coin : RecyclableObject
 {
     private float timeTillDisapear = 5;
     private SpriteRenderer image;
@@ -18,14 +17,15 @@ public class Coin : MonoBehaviour
         image = GetComponent<SpriteRenderer>();
     }
 
-    private void OnEnable()
+    public override void Init()
     {
         disableCo = StartCoroutine(DisapearCO());
         flickerCo = StartCoroutine(Flicker());
     }
 
-    private void OnDisable()
+    public override void Release()
     {
+        base.Release();
         image.enabled = true;
         StopCoroutine(disableCo);
         StopCoroutine(flickerCo);
@@ -39,7 +39,7 @@ public class Coin : MonoBehaviour
 
     private void Disapear()
     {
-        gameObject.SetActive(false);
+        Recycle();
     }
 
     private IEnumerator Flicker()

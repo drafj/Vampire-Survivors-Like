@@ -8,29 +8,28 @@ public class SawMovement : MonoBehaviour
     [SerializeField] private Transform player;
 
     private float velocity;
-    private IStats stats;
-    private IGameCycle startGame;
-
-    private void Awake()
-    {
-        SetInterfaces();
-    }
+    private IStats _stats;
+    private IGameCycle _startGame;
 
     private void OnEnable()
     {
-        startGame.OnGameStarted.AddListener(SetVelocity);
+        _startGame.OnGameStarted.AddListener(SetVelocity);
         SetVelocity();
     }
 
     private void SetVelocity()
     {
-        velocity = stats.SawsVelocity;
+        velocity = _stats.SawsVelocity;
     }
 
-    private void SetInterfaces()
+    public void SetStatsManager(IStats stats)
     {
-        stats = FindObjectsOfType<MonoBehaviour>().OfType<IStats>().FirstOrDefault();
-        startGame = FindObjectsOfType<MonoBehaviour>().OfType<IGameCycle>().FirstOrDefault();
+        _stats = stats;
+    }
+
+    public void SetGameCycle(IGameCycle gameCycle)
+    {
+        _startGame = gameCycle;
     }
 
     private void Rotate()

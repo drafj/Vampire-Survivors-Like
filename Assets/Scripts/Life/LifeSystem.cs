@@ -1,15 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System.Linq;
 
 public class LifeSystem : MonoBehaviour, IDamageable
 {
     private UnityEvent _onHitted = new UnityEvent();
-    private UnityEvent _onDeath = new UnityEvent();
+    public event Action onDeath;
     public UnityEvent OnHitted { get { return _onHitted; } }
-    public UnityEvent OnDeath { get { return _onDeath; } }
 
     private int increaseFactor = 100;
     private int maxLife = 100;
@@ -29,7 +28,7 @@ public class LifeSystem : MonoBehaviour, IDamageable
         if (_life <= 0)
         {
             _life = 0;
-            _onDeath.Invoke();
+            onDeath.Invoke();
         }
     }
 
@@ -43,20 +42,26 @@ public class LifeSystem : MonoBehaviour, IDamageable
         _onHitted.Invoke();
     }
 
-    public void ResetLife()
+    private void ResetLife()
     {
         maxLife = increaseFactor;
         _life = maxLife;
     }
 
-    public void SetLifeToMaxLife()
+    public void ConfigureEnemy(IGameCycle gameCycle, RecyclableObject recyclableObject, int actualLevelEnemyLife)
     {
-        _life = maxLife;
+        _life = actualLevelEnemyLife;
+        gameCycle.OnResetLevel += ResetLife;
+        recyclableObject.OnRelease += SetLifeToMaxLife;
     }
 
-    public void IncreaseMaxLife()
+    public void ConfigurePlayer(IGameCycle gameCycle)
     {
-        maxLife = maxLife + increaseFactor;
+        onDeath += ResetLife;
+    }
+
+    private void SetLifeToMaxLife()
+    {
         _life = maxLife;
     }
 }

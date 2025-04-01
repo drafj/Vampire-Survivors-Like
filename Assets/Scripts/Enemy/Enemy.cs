@@ -2,29 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : RecyclableObject
 {
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private List<Color> colors = new List<Color>();
     private int damage = 20;
-    private IPool enemyPool;
-    private IDamageable lifeSystem;
-    private IPoolWithParams coinPool;
+    private IPool _enemyPool;
+    private IPool _coinPool;
+    private IDamageable _lifeSystem;
 
     private void Awake()
     {
-        SetInterfaces();
+        SetLifeSystem();
     }
 
-    private void OnEnable()
+    public override void Init()
     {
-        lifeSystem.OnDeath.AddListener(enemyPool.SpawnObject);
-        lifeSystem.OnDeath.AddListener(Dead);
+        if (_enemyPool == null || _coinPool == null)
+            FindObjectOfType<Installer>().SetEnemyDependences(this);
+
+        while (_enemyPool == null) return;
+
+        spriteRenderer.color = colors[Random.Range(0, colors.Count)];
+        _lifeSystem.onDeath += SpawnNewEnemy;
+        _lifeSystem.onDeath += Dead;
     }
 
-    private void SetInterfaces()
+    private void SpawnNewEnemy()
     {
-        enemyPool = GameObject.FindGameObjectWithTag("EnemyPool").GetComponent<IPool>();
-        coinPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<IPoolWithParams>();
-        lifeSystem = GetComponent<IDamageable>();
+        _enemyPool.SpawnObject();
+    }
+
+    public void SetEnemyPool(IPool enemyPool)
+    {
+        _enemyPool = enemyPool;
+    }
+
+    public void SetCoinsPool(IPool coinPool)
+    {
+        _coinPool = coinPool;
+    }
+
+    private void SetLifeSystem()
+    {
+        _lifeSystem = GetComponent<IDamageable>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -38,14 +59,14 @@ public class Enemy : MonoBehaviour
 
     private void Dead()
     {
-        coinPool.SpawnObject(transform.position);
-        gameObject.SetActive(false);
+        _coinPool.SpawnObject(transform);
+        Recycle();
     }
 
-    private void OnDisable()
+    public override void Release()
     {
-        lifeSystem.OnDeath.RemoveListener(enemyPool.SpawnObject);
-        lifeSystem.OnDeath.RemoveListener(Dead);
-        lifeSystem.SetLifeToMaxLife();
+        base.Release();
+        _lifeSystem.onDeath -= SpawnNewEnemy;
+        _lifeSystem.onDeath -= Dead;
     }
 }

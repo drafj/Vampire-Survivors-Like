@@ -1,34 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class SawDamage : MonoBehaviour
 {
     private int damage;
-    private IStats stats;
-    private IGameCycle startGame;
-
-    private void Awake()
-    {
-        SetInterfaces();
-    }
+    private IStats _stats;
+    private IGameCycle _startGame;
 
     private void OnEnable()
     {
-        startGame.OnGameStarted.AddListener(SetDamage);
+        _startGame.OnGameStarted.AddListener(SetDamage);
         SetDamage();
     }
 
     private void SetDamage()
     {
-        damage = stats.Damage;
+        damage = _stats.Damage;
     }
 
-    private void SetInterfaces()
+    public void SetStatsManager(IStats stats)
     {
-        stats = FindObjectsOfType<MonoBehaviour>().OfType<IStats>().FirstOrDefault();
-        startGame = FindObjectsOfType<MonoBehaviour>().OfType<IGameCycle>().FirstOrDefault();
+        _stats = stats;
+    }
+
+    public void SetGameCycle(IGameCycle gameCycle)
+    {
+        _startGame = gameCycle;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

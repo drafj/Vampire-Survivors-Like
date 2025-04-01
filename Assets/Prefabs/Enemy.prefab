@@ -278,8 +278,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 2}
+  m_Offset: {x: -0.016935349, y: 0.02463305}
+  m_Size: {x: 0.7013235, y: 1.9507339}
   m_Direction: 0
 --- !u!114 &3442526613022513626
 MonoBehaviour:
@@ -306,6 +306,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f44586d972177a419a5f02558f247b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 7339676358094258798}
+  colors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0.5372549, g: 0.039215688, b: 0.8862745, a: 1}
+  - {r: 0.21960784, g: 0.9882353, b: 0.9529412, a: 1}
+  - {r: 0.94509804, g: 0.99607843, b: 0.1764706, a: 1}
 --- !u!114 &4867273103653736827
 MonoBehaviour:
   m_ObjectHideFlags: 0

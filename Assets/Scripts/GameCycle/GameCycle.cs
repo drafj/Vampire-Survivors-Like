@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,21 +15,22 @@ public class GameCycle : MonoBehaviour, IGameCycle
     [SerializeField] private GameObject upgradeMenu;
     [SerializeField] private Slider gameCycleBar;
     [SerializeField] private SpriteRenderer player;
+    private int initialEnemyLife = 100;
+    public int actualLevelEnemyLife = 100;
     private int enemiesCount = 1;
-    private int maxEnemiesPerLevel = 4;
+    private int maxEnemiesPerLevel = 40;
     private UnityEvent _onGameStarted = new UnityEvent();
     private UnityEvent _onGameEnded = new UnityEvent();
     private Coroutine actualGameCycleCo;
-    private IPool enemyPool;
-    private IPoolWithParams coinPool;
-    private bool inGameplay;
-    private bool firstTime = true;
+    private IPool _enemyPool;
+    private IPool _coinPool;
     private float levelTime = 30;
+
+    public event Action OnLevelUp;
+    public event Action OnResetLevel;
 
     private void Awake()
     {
-        enemyPool = GameObject.FindGameObjectWithTag("EnemyPool").GetComponent<IPool>();
-        coinPool = GameObject.FindGameObjectWithTag("CoinPool").GetComponent<IPoolWithParams>();
         _onGameEnded.AddListener(EndGame);
         Time.timeScale = 0;
     }
@@ -36,9 +38,8 @@ public class GameCycle : MonoBehaviour, IGameCycle
     public void StartGame()
     {
         Time.timeScale = 1;
-        inGameplay = true;
-        enemyPool.DespawnObjects();
-        coinPool.DespawnObjects();
+        _enemyPool.DespawnObjects();
+        _coinPool.DespawnObjects();
         _onGameStarted.Invoke();
         ActivateGameplayObjects();
         if (actualGameCycleCo != null)
@@ -46,9 +47,18 @@ public class GameCycle : MonoBehaviour, IGameCycle
         actualGameCycleCo = StartCoroutine(GameCycleCo());
     }
 
+    public void SetEnemyPool(IPool enemyPool)
+    {
+        _enemyPool = enemyPool;
+    }
+
+    public void SetCoinsPool(IPool coinPool)
+    {
+        _coinPool = coinPool;
+    }
+
     private void EndGame()
     {
-        inGameplay = false;
         DeactivateGameplayObjects();
         if (actualGameCycleCo != null)
             StopCoroutine(actualGameCycleCo);
@@ -59,14 +69,16 @@ public class GameCycle : MonoBehaviour, IGameCycle
     {
         if (enemiesCount < maxEnemiesPerLevel)
         enemiesCount++;
-        enemyPool.IncreaseEnemiesLife();
+        actualLevelEnemyLife += initialEnemyLife;
+        OnLevelUp?.Invoke();
         StartGame();
     }
 
     public void Restart()
     {
         enemiesCount = 1;
-        enemyPool.ResetEnemiesLife();
+        actualLevelEnemyLife = initialEnemyLife;
+        OnResetLevel?.Invoke();
         StartGame();
     }
 
@@ -74,7 +86,6 @@ public class GameCycle : MonoBehaviour, IGameCycle
     {
         Time.timeScale = 0;
         upgradeMenu.SetActive(true);
-        inGameplay = false;
         DeactivateGameplayObjects();
         if (actualGameCycleCo != null)
             StopCoroutine(actualGameCycleCo);
@@ -102,7 +113,7 @@ public class GameCycle : MonoBehaviour, IGameCycle
         }
         for (int i = 0; i < enemiesCount; i++)
         {
-            enemyPool.SpawnObject();
+            _enemyPool.SpawnObject();
         }
         player.enabled = true;
     }
@@ -113,18 +124,16 @@ public class GameCycle : MonoBehaviour, IGameCycle
         {
             gameplayObjects[i].SetActive(false);
         }
-        enemyPool.DespawnObjects();
-        coinPool.DespawnObjects();
+        _enemyPool.DespawnObjects();
+        _coinPool.DespawnObjects();
         player.enabled = false;
     }
 
     private void Update()
     {
-        if (!PlayerInput.actions["StartGame"].WasPressedThisFrame()) return;
-        if (inGameplay || firstTime)
+        if (PlayerInput.actions["EndGame"].WasPressedThisFrame())
         {
-            if (firstTime) firstTime = false;
-            StartGame();
+            EndLevel();
         }
     }
 }
